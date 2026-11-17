@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customer Churn Analysis — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#f4f6fa; font-family:"Segoe UI",system-ui,sans-serif; color:#1a2233; padding:24px; }
+  h1 { font-size:20px; margin-bottom:4px; }
+  .sub { color:#5b6b85; font-size:13px; margin-bottom:20px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:22px; }
+  .card { background:#fff; border:1px solid #e3e8f0; border-radius:10px; padding:14px; }
+  .card .l { font-size:10.5px; letter-spacing:1px; color:#8a97ad; text-transform:uppercase; font-weight:700; }
+  .card .v { font-size:19px; font-weight:800; margin-top:5px; }
+  .panel { background:#fff; border:1px solid #e3e8f0; border-radius:12px; padding:18px; margin-bottom:20px; }
+  .panel h2 { font-size:14.5px; margin-bottom:2px; }
+  .panel .desc { font-size:12px; color:#5b6b85; margin-bottom:12px; }
+  .chartbox { position:relative; height:320px; }
+  .insight { background:#eef4ff; border-left:3px solid #2563eb; padding:10px 12px; font-size:12.5px; margin-top:10px; color:#1e3a6e; border-radius:0 6px 6px 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:900px){ .grid2 { grid-template-columns:1fr; } }
+  .riskbox { background:#fff7ed; border:1px solid #fed7aa; border-radius:10px; padding:16px; margin-top:8px; }
+  .riskbox b { font-size:16px; }
+</style>
+</head>
+<body>
+<h1>Customer Churn Analysis — Telecom Retention</h1>
+<div class="sub">7,000 subscribers · 1,820 churned (26.0%) · MRR lost to churn: ₹89.8K · SQL risk segment: month-to-month + tenure &lt; 12m + 2+ tickets</div>
+
+<div class="cards">
+  <div class="card"><div class="l">Subscribers</div><div class="v">7,000</div></div>
+  <div class="card"><div class="l">Churned</div><div class="v">1,820 (26%)</div></div>
+  <div class="card"><div class="l">MRR Lost</div><div class="v">₹89.8K</div></div>
+  <div class="card"><div class="l">Risk Segment</div><div class="v">922 cust · 85.8%</div></div>
+</div>
+
+<div class="grid2">
+  <div class="panel">
+    <h2>Churn Rate by Contract Type</h2>
+    <div class="desc">#1 churn driver — month-to-month is a revolving door</div>
+    <div class="chartbox"><canvas id="c1"></canvas></div>
+    <div class="insight">Month-to-month churns at 45.5% vs ~11% for annual contracts. Move-to-annual campaigns (upgrade discount at month 9) target the 3,016 revolving customers.</div>
+  </div>
+  <div class="panel">
+    <h2>Churn Rate by Tenure Bucket</h2>
+    <div class="desc">Early-life churn cliff — first 90 days decide the lifetime</div>
+    <div class="chartbox"><canvas id="c2"></canvas></div>
+    <div class="insight">0–6 month subscribers churn at 78%; after 24 months churn is near zero. Onboarding + day-30/60/90 check-in programme is the highest-leverage retention play.</div>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="panel">
+    <h2>Churn Rate by Support Tickets</h2>
+    <div class="desc">Service quality is a leading indicator</div>
+    <div class="chartbox"><canvas id="c3"></canvas></div>
+    <div class="insight">3+ tickets → 37–100% churn vs ~15% baseline. Rule: any customer reaching ticket 3 triggers supervisor escalation before ticket 4.</div>
+  </div>
+  <div class="panel">
+    <h2>Churn Rate: Autopay vs Manual Payment</h2>
+    <div class="desc">Friction in billing = churn fuel</div>
+    <div class="chartbox"><canvas id="c4"></canvas></div>
+    <div class="insight">Autopay users churn at 18.9% vs 34.7% for manual payments — autopay enrolment is a zero-cost retention lever for the 3,156 manual-payment customers.</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>High-Risk Segment — Retention Target (SQL-defined)</h2>
+  <div class="desc">contract = Month-to-month AND tenure &lt; 12 months AND support tickets ≥ 2</div>
+  <div class="riskbox">
+    <b>922 customers (13.2% of base) → 85.8% churn rate → covers 43.4% of all churn.</b><br>
+    Retention offer (upgrade discount + dedicated service review) to this segment addresses nearly half of all churn with 13% of the contact cost.
+  </div>
+</div>
+
+<script>
+Chart.defaults.font.family = '"Segoe UI",system-ui,sans-serif';
+fetch('agg_data.json').then(r => r.json()).then(d => {
+  const c = d.byContract;
+  new Chart(c1, { type:'bar', data:{ labels:c.map(x=>x.k), datasets:[{ label:'Churn %', data:c.map(x=>x.rate),
+    backgroundColor:['#dc2626','#3b82f6','#059669'] }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{ ticks:{ callback:v=>v+'%' } } } } });
+
+  const t = d.byTenure;
+  new Chart(c2, { type:'bar', data:{ labels:t.map(x=>x.bucket.replace(/^[a-e] /,'')+' mo'), datasets:[{ label:'Churn %', data:t.map(x=>x.rate),
+    backgroundColor:t.map(x=>x.rate>50?'#dc2626':x.rate>20?'#f59e0b':'#059669') }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{ ticks:{ callback:v=>v+'%' } } } } });
+
+  const k = d.byTickets;
+  new Chart(c3, { type:'line', data:{ labels:k.map(x=>x.t + ' tickets'), datasets:[{ label:'Churn %', data:k.map(x=>x.rate),
+    borderColor:'#dc2626', backgroundColor:'rgba(220,38,38,.10)', fill:true, tension:.25, pointRadius:3 }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{ ticks:{ callback:v=>v+'%' } } } } });
+
+  const a = d.byAutopay;
+  new Chart(c4, { type:'bar', data:{ labels:['Manual payment','Autopay'], datasets:[{ label:'Churn %', data:a.map(x=>x.rate),
+    backgroundColor:['#dc2626','#059669'] }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{ ticks:{ callback:v=>v+'%' } } } } });
+});
+</script>
+</body>
+</html>
