@@ -1,0 +1,179 @@
+{
+  "overall": {
+    "n": 7000,
+    "churned": 1820,
+    "rate": 26,
+    "avg_tenure": 28.4
+  },
+  "byContract": [
+    {
+      "k": "Month-to-month",
+      "n": 3016,
+      "churned": 1373,
+      "rate": 45.5
+    },
+    {
+      "k": "One year",
+      "n": 1868,
+      "churned": 216,
+      "rate": 11.6
+    },
+    {
+      "k": "Two year",
+      "n": 2116,
+      "churned": 231,
+      "rate": 10.9
+    }
+  ],
+  "byTenure": [
+    {
+      "bucket": "a 0-6",
+      "n": 1309,
+      "churned": 1021,
+      "rate": 78
+    },
+    {
+      "bucket": "b 6-12",
+      "n": 890,
+      "churned": 475,
+      "rate": 53.4
+    },
+    {
+      "bucket": "c 12-24",
+      "n": 1311,
+      "churned": 323,
+      "rate": 24.6
+    },
+    {
+      "bucket": "d 24-48",
+      "n": 1750,
+      "churned": 1,
+      "rate": 0.1
+    },
+    {
+      "bucket": "e 48+",
+      "n": 1740,
+      "churned": 0,
+      "rate": 0
+    }
+  ],
+  "byTickets": [
+    {
+      "t": 0,
+      "n": 1644,
+      "churned": 289,
+      "rate": 17.6
+    },
+    {
+      "t": 1,
+      "n": 1629,
+      "churned": 271,
+      "rate": 16.6
+    },
+    {
+      "t": 2,
+      "n": 1706,
+      "churned": 246,
+      "rate": 14.4
+    },
+    {
+      "t": 3,
+      "n": 547,
+      "churned": 205,
+      "rate": 37.5
+    },
+    {
+      "t": 4,
+      "n": 522,
+      "churned": 191,
+      "rate": 36.6
+    },
+    {
+      "t": 5,
+      "n": 531,
+      "churned": 197,
+      "rate": 37.1
+    },
+    {
+      "t": 6,
+      "n": 194,
+      "churned": 194,
+      "rate": 100
+    },
+    {
+      "t": 7,
+      "n": 227,
+      "churned": 227,
+      "rate": 100
+    }
+  ],
+  "byMonthly": [
+    {
+      "bucket": "a <30",
+      "n": 1981,
+      "churned": 474,
+      "rate": 23.9
+    },
+    {
+      "bucket": "b 30-50",
+      "n": 2202,
+      "churned": 610,
+      "rate": 27.7
+    },
+    {
+      "bucket": "c 50-70",
+      "n": 1025,
+      "churned": 277,
+      "rate": 27
+    },
+    {
+      "bucket": "d 70+",
+      "n": 1792,
+      "churned": 459,
+      "rate": 25.6
+    }
+  ],
+  "byService": [
+    {
+      "k": "DSL",
+      "n": 2364,
+      "churned": 633,
+      "rate": 26.8,
+      "avg_monthly": 42.6
+    },
+    {
+      "k": "Fiber",
+      "n": 2299,
+      "churned": 601,
+      "rate": 26.1,
+      "avg_monthly": 80.5
+    },
+    {
+      "k": "None",
+      "n": 2337,
+      "churned": 586,
+      "rate": 25.1,
+      "avg_monthly": 24.9
+    }
+  ],
+  "byAutopay": [
+    {
+      "k": 0,
+      "n": 3156,
+      "churned": 1095,
+      "rate": 34.7
+    },
+    {
+      "k": 1,
+      "n": 3844,
+      "churned": 725,
+      "rate": 18.9
+    }
+  ],
+  "risk": {
+    "n": 922,
+    "churned": 791,
+    "rate": 85.8
+  },
+  "churnedRevenue": 89797
+}
